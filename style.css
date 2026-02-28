@@ -99,7 +99,12 @@ h1 {
     position: relative;
     margin-bottom: 30px;
     width: 100%;
-    overflow-x: auto;
+    overflow-x: hidden; /* 禁止横向滚动，刚好填满 */
+}
+
+.string {
+    display: flex;
+    width: 100%;
 }
 
 /* 品记 */

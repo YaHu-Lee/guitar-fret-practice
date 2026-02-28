@@ -67,13 +67,12 @@ function renderFretboard() {
     markerFrets.forEach(fret => {
         const marker = document.createElement('div');
         marker.className = 'fret-marker' + (fret === 12 ? ' double' : '');
-        const fretWidth = 100 / 13; // 12品 + 空弦
-        marker.style.left = `${(fret + 0.5) * fretWidth}%`;
+        marker.dataset.fret = fret;
         fretboardEl.appendChild(marker);
         if (fret === 12) {
             const marker2 = document.createElement('div');
             marker2.className = 'fret-marker double';
-            marker2.style.left = `${(fret + 0.5) * fretWidth}%`;
+            marker2.dataset.fret = fret;
             fretboardEl.appendChild(marker2);
         }
     });
@@ -207,32 +206,42 @@ function bindEvents() {
 
 // 动态适配屏幕宽度：根据屏幕宽度自动计算每个品格大小，保证刚好填满并且可点击
 function adaptScreenWidth() {
-    const containerWidth = document.querySelector('.guitar-fretboard').clientWidth - 20; // 减去指板内边距
-    const totalFrets = 13; // 0-12品共13个品格
-    const minFretWidth = 30; // 最小宽度保证能点击
-    const firstFretRatio = 0.7; // 第一个品格（0品）窄一点
+    // 获取指板可用宽度
+    const fretboardWidth = document.querySelector('.guitar-fretboard').clientWidth;
+    // 一共13个品格：第0品(1个) + 1-12品(12个)
+    // 第0品比例是0.7，总份数: 0.7 + 12 = 12.7份
+    const totalUnits = 12.7;
+    // 最小宽度保证能点击
+    const minUnitWidth = 30;
     
-    // 计算总宽度：0品 + 12个品格
-    const totalWidthNeeded = (fretWidth) => (fretWidth * firstFretRatio) + (12 * fretWidth);
-    // 找到最合适的宽度，保证总宽度刚好等于容器宽度
-    let fretWidth = containerWidth / (firstFretRatio + 12);
-    
-    // 不小于最小可点击宽度
-    if (fretWidth < minFretWidth) {
-        fretWidth = minFretWidth;
+    // 每个单位宽度
+    let unitWidth = fretboardWidth / totalUnits;
+    // 保证不小于最小点击宽度，如果超出就允许一点点滚动，但是最小点击优先
+    if (unitWidth < minUnitWidth) {
+        unitWidth = minUnitWidth;
     }
     
-    // 设置每个品格的宽度
+    // 设置每个品格宽度
     const allFrets = document.querySelectorAll('.fret');
     allFrets.forEach((fret, index) => {
-        if (index === 0) { // 第一个品格（0品）窄一点
-            const width = fretWidth * firstFretRatio;
-            fret.style.width = `${width}px`;
-            fret.style.minWidth = `${width}px`;
+        let width;
+        if (index === 0) {
+            width = unitWidth * 0.7;
         } else {
-            fret.style.width = `${fretWidth}px`;
-            fret.style.minWidth = `${fretWidth}px`;
+            width = unitWidth;
         }
+        // 设置固定宽度，不伸缩
+        fret.style.width = `${width}px`;
+        fret.style.minWidth = `${width}px`;
+        fret.style.flex = `none`;
+    });
+    
+    // 修正品记位置
+    const markers = document.querySelectorAll('.fret-marker');
+    markers.forEach(marker => {
+        const fretIndex = parseInt(marker.dataset.fret);
+        const leftPos = (fretIndex === 12 ? 0.7 + 11.5 : 0.7 + fretIndex - 0.5) * unitWidth;
+        marker.style.left = `${leftPos}px`;
     });
 }
 
