@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2d3748;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#key-select {
+    padding: 8px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    cursor: pointer;
+}
+
+.stats {
+    display: flex;
+    gap: 30px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.prompt {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.prompt h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #2d3748;
+}
+
+#target-note {
+    color: #667eea;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.feedback {
+    font-size: 20px;
+    font-weight: 600;
+    min-height: 30px;
+}
+
+.feedback.correct {
+    color: #38a169;
+}
+
+.feedback.incorrect {
+    color: #e53e3e;
+}
+
+/* 吉他指板样式 */
+.guitar-fretboard {
+    background: #8b4513;
+    border: 5px solid #5a2e0e;
+    border-radius: 10px;
+    padding: 20px 0;
+    position: relative;
+    margin-bottom: 30px;
+    overflow-x: auto;
+}
+
+/* 品记 */
+.fret-marker {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.fret-marker.double {
+    top: 25%;
+}
+
+.fret-marker.double + .fret-marker.double {
+    top: 75%;
+}
+
+/* 弦 */
+.string {
+    height: 40px;
+    position: relative;
+    display: flex;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.string:last-child {
+    border-bottom: none;
+}
+
+.string-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #d4d4d4;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.string:nth-child(1) .string-line { height: 1.5px; background: #c8c8c8; } /* 1弦最细（最上面） */
+.string:nth-child(2) .string-line { height: 2px; background: #d0d0d0; }
+.string:nth-child(3) .string-line { height: 2.5px; background: #d8d8d8; }
+.string:nth-child(4) .string-line { height: 3px; background: #e0e0e0; }
+.string:nth-child(5) .string-line { height: 4px; background: #e8e8e8; }
+.string:nth-child(6) .string-line { height: 5px; background: #f0f0f0; } /* 6弦最粗（最下面） */
+
+/* 品格 */
+.fret {
+    flex: 1;
+    min-width: 80px;
+    position: relative;
+    border-right: 3px solid #c0c0c0;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.fret:first-child {
+    min-width: 60px;
+    border-right: 5px solid #fff; /* 琴枕 */
+}
+
+.fret:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.fret.correct {
+    background: rgba(72, 187, 120, 0.5) !important;
+}
+
+.fret.incorrect {
+    background: rgba(229, 62, 62, 0.5) !important;
+}
+
+.note-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* 按钮 */
+.actions {
+    text-align: center;
+}
+
+button {
+    padding: 12px 30px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 22px;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .stats {
+        justify-content: space-between;
+        font-size: 16px;
+        gap: 15px;
+    }
+    
+    .prompt h2 {
+        font-size: 18px;
+    }
+    
+    #target-note {
+        font-size: 24px;
+    }
+    
+    .fret {
+        min-width: 40px;
+    }
+    
+    .fret:first-child {
+        min-width: 30px;
+    }
+    
+    .note-label {
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>吉他指板音位练习工具</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎸 吉他指板音位练习工具</h1>
+        
+        <!-- 控制区 -->
+        <div class="controls">
+            <div class="control-group">
+                <label for="key-select">选择调式：</label>
+                <select id="key-select">
+                    <option value="C">C大调</option>
+                    <option value="G">G大调</option>
+                    <option value="D">D大调</option>
+                    <option value="A">A大调</option>
+                    <option value="E">E大调</option>
+                    <option value="F">F大调</option>
+                    <option value="Bb">Bb大调</option>
+                    <option value="Eb">Eb大调</option>
+                </select>
+            </div>
+            
+            <div class="stats">
+                <span>答题数：<span id="total-count">0</span></span>
+                <span>正确率：<span id="accuracy">0%</span></span>
+            </div>
+        </div>
+        
+        <!-- 题目区 -->
+        <div class="prompt">
+            <h2>请点击指板上的 <span id="target-note">C</span> 音</h2>
+            <div id="feedback" class="feedback"></div>
+        </div>
+        
+        <!-- 吉他指板容器 -->
+        <div id="guitar-fretboard" class="guitar-fretboard"></div>
+        
+        <!-- 操作按钮 -->
+        <div class="actions">
+            <button id="reset-btn">重置统计</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
