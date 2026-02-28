@@ -207,20 +207,20 @@ function bindEvents() {
 // 竖屏自动旋转：当高度大于宽度（手机竖屏），旋转指板利用纵向空间
 function adaptOrientation() {
     const container = document.querySelector('.container');
-    const fretboard = document.querySelector('.guitar-fretboard');
     const isPortrait = window.innerHeight > window.innerWidth;
     
     if (isPortrait) {
-        // 竖屏：旋转90度，利用纵向空间
-        const rotationAngle = 90;
-        const scale = window.innerWidth / window.innerHeight * 0.98;
-        container.style.transformOrigin = 'top left';
-        container.style.transform = `rotate(${rotationAngle}deg) scale(${scale})`;
-        container.style.marginTop = `${window.innerWidth}px`;
+        // 竖屏：旋转90度，刚好适配屏幕
+        container.style.transform = 'rotate(90deg)';
+        container.style.transformOrigin = 'center center';
+        // 旋转后居中显示
+        container.style.marginLeft = `${(window.innerHeight - window.innerWidth) / 2}px`;
+        container.style.marginTop = `${(window.innerHeight - window.innerWidth) / 2}px`;
     } else {
         // 横屏：恢复正常
         container.style.transform = 'none';
-        container.style.marginTop = '0';
+        container.style.marginLeft = '0 auto';
+        container.style.marginTop = '20px';
     }
 }
 
