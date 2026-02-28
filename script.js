@@ -205,5 +205,41 @@ function bindEvents() {
     });
 }
 
+// 动态适配屏幕宽度：根据屏幕宽度自动计算每个品格大小，保证刚好填满并且可点击
+function adaptScreenWidth() {
+    const containerWidth = document.querySelector('.container').clientWidth - 40; // 减去容器内边距
+    const totalFrets = 13; // 0-12品共13个品格
+    const minFretWidth = 30; // 最小宽度保证能点击
+    
+    // 计算能刚好填满容器的最大宽度，不小于最小宽度
+    const maxPossibleWidth = containerWidth / totalFrets;
+    const fretWidth = Math.max(maxPossibleWidth, minFretWidth);
+    
+    // 设置每个品格的宽度
+    const allFrets = document.querySelectorAll('.fret');
+    allFrets.forEach((fret, index) => {
+        if (index === 0) { // 第一个品格（0品）窄一点
+            fret.style.width = `${fretWidth * 0.8}px`;
+            fret.style.minWidth = `${fretWidth * 0.8}px`;
+        } else {
+            fret.style.width = `${fretWidth}px`;
+            fret.style.minWidth = `${fretWidth}px`;
+        }
+    });
+}
+
+// 启动
+function init() {
+    renderFretboard();
+    adaptScreenWidth();
+    generateNewQuestion();
+    bindEvents();
+    
+    // 屏幕大小变化/旋转屏幕时重新适配
+    window.addEventListener('resize', () => {
+        adaptScreenWidth();
+    });
+}
+
 // 启动
 init();

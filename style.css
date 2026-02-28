@@ -114,35 +114,7 @@ h1 {
     z-index: 1;
 }
 
-/* 响应式自动适配：根据屏幕宽度调整每个品格宽度 */
-@media (max-width: 640px) {
-    .fret {
-        min-width: 28px !important;
-    }
-    .fret:first-child {
-        min-width: 25px !important;
-    }
-    .fret-marker {
-        width: 12px;
-        height: 12px;
-    }
-    .note-label {
-        font-size: 10px !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .fret {
-        min-width: 22px !important;
-    }
-    .fret:first-child {
-        min-width: 20px !important;
-    }
-    .fret-marker {
-        width: 8px;
-        height: 8px;
-    }
-}
+/* 动态适配由JS控制，保证刚好填满屏幕且可点击 */
 
 .fret-marker.double {
     top: 25%;
