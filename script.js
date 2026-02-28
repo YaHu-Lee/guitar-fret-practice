@@ -193,6 +193,16 @@ function bindEvents() {
         generateNewQuestion();
     });
     
+    // 显示所有C音开关
+    const showAllCCheckbox = document.getElementById('show-all-c');
+    showAllCCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            showAllFixedNotes('C');
+        } else {
+            clearAllFixedNotes();
+        }
+    });
+    
     // 重置统计
     resetBtnEl.addEventListener('click', () => {
         totalCount = 0;
@@ -201,6 +211,40 @@ function bindEvents() {
         clearHighlights();
         generateNewQuestion();
         isAnswering = true;
+        // 同时清除固定显示的音符
+        clearAllFixedNotes();
+        document.getElementById('show-all-c').checked = false;
+    });
+}
+
+// 显示固定的音符（比如所有C音）给初学者参考
+function showAllFixedNotes(noteName) {
+    clearAllFixedNotes();
+    const normalizedTarget = sharpToFlat[noteName] || noteName;
+    for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
+        for (let fretIndex = 0; fretIndex <= 12; fretIndex++) {
+            const note = stringNotes[stringIndex][fretIndex];
+            const normalizedNote = sharpToFlat[note] || note;
+            if (normalizedNote === normalizedTarget) {
+                const fretEl = document.querySelector(`.fret[data-string="${stringIndex}"][data-fret="${fretIndex}"]`);
+                const label = document.createElement('div');
+                label.className = 'note-label fixed-note';
+                label.textContent = noteName;
+                fretEl.appendChild(label);
+                fretEl.classList.add('correct');
+            }
+        }
+    }
+}
+
+// 清除所有固定显示的音符
+function clearAllFixedNotes() {
+    document.querySelectorAll('.fixed-note').forEach(el => el.remove());
+    document.querySelectorAll('.fret.correct').forEach(el => {
+        // 只去掉我们标记的固定正确类，不影响答题过程中的标记
+        if (!el.querySelector('.note-label:not(.fixed-note)')) {
+            el.classList.remove('correct');
+        }
     });
 }
 
