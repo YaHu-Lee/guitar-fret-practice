@@ -204,43 +204,48 @@ function bindEvents() {
     });
 }
 
-// 动态适配屏幕宽度：根据屏幕宽度自动计算每个品格大小，保证刚好填满并且可点击
+// 动态适配屏幕宽度：根据屏幕宽度自动计算每个品格大小，所有弦宽度自动对齐
 function adaptScreenWidth() {
     // 获取指板可用宽度
     const fretboardWidth = document.querySelector('.guitar-fretboard').clientWidth;
-    // 一共13个品格：第0品(1个) + 1-12品(12个)
-    // 第0品比例是0.7，总份数: 0.7 + 12 = 12.7份
+    // 一共13个品格：第0品(比例0.7) + 1-12品(每个比例1)
     const totalUnits = 12.7;
-    // 最小宽度保证能点击
+    // 最小单位宽度保证能点击
     const minUnitWidth = 30;
-    
-    // 每个单位宽度
     let unitWidth = fretboardWidth / totalUnits;
-    // 保证不小于最小点击宽度，如果超出就允许一点点滚动，但是最小点击优先
+    
+    // 如果容器太窄，保证最小宽度，允许少量滚动
     if (unitWidth < minUnitWidth) {
         unitWidth = minUnitWidth;
+        document.querySelector('.guitar-fretboard').style.overflowX = 'auto';
+    } else {
+        document.querySelector('.guitar-fretboard').style.overflowX = 'hidden';
     }
     
-    // 设置每个品格宽度
-    const allFrets = document.querySelectorAll('.fret');
-    allFrets.forEach((fret, index) => {
-        let width;
-        if (index === 0) {
-            width = unitWidth * 0.7;
-        } else {
-            width = unitWidth;
-        }
-        // 设置固定宽度，不伸缩
-        fret.style.width = `${width}px`;
-        fret.style.minWidth = `${width}px`;
-        fret.style.flex = `none`;
+    // 设置每个品格，所有弦第一格都是0.7，后面都是1，这样自然对齐
+    const allStrings = document.querySelectorAll('.string');
+    allStrings.forEach(string => {
+        const frets = string.querySelectorAll('.fret');
+        frets.forEach((fret, index) => {
+            const flexBasis = index === 0 ? unitWidth * 0.7 : unitWidth;
+            fret.style.width = `${flexBasis}px`;
+            fret.style.minWidth = `${flexBasis}px`;
+            fret.style.flex = `none`;
+        });
     });
     
     // 修正品记位置
     const markers = document.querySelectorAll('.fret-marker');
     markers.forEach(marker => {
         const fretIndex = parseInt(marker.dataset.fret);
-        const leftPos = (fretIndex === 12 ? 0.7 + 11.5 : 0.7 + fretIndex - 0.5) * unitWidth;
+        // 计算品记在指板上的位置
+        let leftPos;
+        if (fretIndex === 12) {
+            leftPos = (0.7) + 11.5 * 1;
+        } else {
+            leftPos = 0.7 + (fretIndex - 0.5);
+        }
+        leftPos = leftPos * unitWidth;
         marker.style.left = `${leftPos}px`;
     });
 }
