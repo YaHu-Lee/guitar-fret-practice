@@ -104,7 +104,7 @@ h1 {
 
 .string {
     display: flex;
-    width: 100%;
+    width: fit-content; /* 适应内容总宽度，溢出时延伸到最右侧 */
 }
 
 /* 品记 */
