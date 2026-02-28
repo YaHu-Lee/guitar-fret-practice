@@ -204,6 +204,26 @@ function bindEvents() {
     });
 }
 
+// 竖屏自动旋转：当高度大于宽度（手机竖屏），旋转指板利用纵向空间
+function adaptOrientation() {
+    const container = document.querySelector('.container');
+    const fretboard = document.querySelector('.guitar-fretboard');
+    const isPortrait = window.innerHeight > window.innerWidth;
+    
+    if (isPortrait) {
+        // 竖屏：旋转90度，利用纵向空间
+        const rotationAngle = 90;
+        const scale = window.innerWidth / window.innerHeight * 0.98;
+        container.style.transformOrigin = 'top left';
+        container.style.transform = `rotate(${rotationAngle}deg) scale(${scale})`;
+        container.style.marginTop = `${window.innerWidth}px`;
+    } else {
+        // 横屏：恢复正常
+        container.style.transform = 'none';
+        container.style.marginTop = '0';
+    }
+}
+
 // 动态适配屏幕宽度：根据屏幕宽度自动计算每个品格大小，所有弦宽度自动对齐
 function adaptScreenWidth() {
     // 获取指板可用宽度
@@ -250,16 +270,25 @@ function adaptScreenWidth() {
     });
 }
 
+// 重新适配：横竖屏切换先调整方向再调整宽度
+function fullAdapt() {
+    adaptOrientation();
+    // 旋转后等布局重绘再调整宽度
+    setTimeout(() => {
+        adaptScreenWidth();
+    }, 100);
+}
+
 // 启动
 function init() {
     renderFretboard();
-    adaptScreenWidth();
+    fullAdapt();
     generateNewQuestion();
     bindEvents();
     
     // 屏幕大小变化/旋转屏幕时重新适配
     window.addEventListener('resize', () => {
-        adaptScreenWidth();
+        fullAdapt();
     });
 }
 
