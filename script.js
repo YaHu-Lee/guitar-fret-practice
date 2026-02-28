@@ -204,45 +204,31 @@ function bindEvents() {
     });
 }
 
-// 竖屏自动旋转：当高度大于宽度（手机竖屏），旋转指板利用纵向空间
-function adaptOrientation() {
-    const container = document.querySelector('.container');
-    const isPortrait = window.innerHeight > window.innerWidth;
-    
-    if (isPortrait) {
-        // 竖屏：旋转90度，刚好适配屏幕
-        container.style.transform = 'rotate(90deg)';
-        container.style.transformOrigin = 'center center';
-        // 旋转后居中显示
-        container.style.marginLeft = `${(window.innerHeight - window.innerWidth) / 2}px`;
-        container.style.marginTop = `${(window.innerHeight - window.innerWidth) / 2}px`;
-    } else {
-        // 横屏：恢复正常
-        container.style.transform = 'none';
-        container.style.marginLeft = '0 auto';
-        container.style.marginTop = '20px';
-    }
-}
-
 // 动态适配屏幕宽度：根据屏幕宽度自动计算每个品格大小，所有弦宽度自动对齐
+// 用户要求：去掉旋转，竖屏保证每个品格最小宽度，放不下允许横向滑动
 function adaptScreenWidth() {
+    // 重置容器旋转和边距，不做旋转
+    const container = document.querySelector('.container');
+    container.style.transform = 'none';
+    container.style.marginLeft = 'auto';
+    container.style.marginTop = '20px';
+    
     // 获取指板可用宽度
     const fretboardWidth = document.querySelector('.guitar-fretboard').clientWidth;
     // 一共13个品格：第0品(比例0.7) + 1-12品(每个比例1)
     const totalUnits = 12.7;
-    // 最小单位宽度保证能点击
-    const minUnitWidth = 30;
+    // 用户要求：保证点击，最小宽度40px，太小不好点
+    const minUnitWidth = 40;
     let unitWidth = fretboardWidth / totalUnits;
     
-    // 如果容器太窄，保证最小宽度，允许少量滚动
+    // 如果计算宽度比最小还小，就用最小宽度，允许横向滚动
     if (unitWidth < minUnitWidth) {
         unitWidth = minUnitWidth;
-        document.querySelector('.guitar-fretboard').style.overflowX = 'auto';
-    } else {
-        document.querySelector('.guitar-fretboard').style.overflowX = 'hidden';
     }
+    // 总是允许横向滚动，保证最小点击宽度
+    document.querySelector('.guitar-fretboard').style.overflowX = 'auto';
     
-    // 设置每个品格，所有弦第一格都是0.7，后面都是1，这样自然对齐
+    // 设置每个品格，所有弦同位置宽度一致，自然对齐
     const allStrings = document.querySelectorAll('.string');
     allStrings.forEach(string => {
         const frets = string.querySelectorAll('.fret');
@@ -270,13 +256,9 @@ function adaptScreenWidth() {
     });
 }
 
-// 重新适配：横竖屏切换先调整方向再调整宽度
+// 重新适配：屏幕变化重新计算宽度
 function fullAdapt() {
-    adaptOrientation();
-    // 旋转后等布局重绘再调整宽度
-    setTimeout(() => {
-        adaptScreenWidth();
-    }, 100);
+    adaptScreenWidth();
 }
 
 // 启动
